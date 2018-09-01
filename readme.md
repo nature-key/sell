@@ -12,3 +12,9 @@
        </dependency>
        
        使用@Data 省略GET SET 
+       
+     3.springboot2
+       new PageRequest(0, 2)废弃 替换 静态of方法
+       根据ID查询使用的方法是:Optional<T> findById(ID id)-->T t = Optional<T>.get();
+       Optional<T>是非null的,但是如果查不到的话,它的get方法会报错,no value present;
+       所以在进行get之前,需要使用Optional.isPresent()方法进行判断  
