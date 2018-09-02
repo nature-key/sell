@@ -18,3 +18,6 @@
        根据ID查询使用的方法是:Optional<T> findById(ID id)-->T t = Optional<T>.get();
        Optional<T>是非null的,但是如果查不到的话,它的get方法会报错,no value present;
        所以在进行get之前,需要使用Optional.isPresent()方法进行判断  
+     4.大坑
+      解决Java程序连接不上MySQL 但是Navicat可以连接的问题!
+      http://binux.cn/2017/03/02/Mac-MySQL-Error/   

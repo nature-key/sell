@@ -2,6 +2,7 @@ package com.springboot.sell.service;
 
 import com.springboot.sell.dataobject.ProductCategory;
 import com.springboot.sell.dataobject.ProductInfo;
+import com.springboot.sell.dto.CartDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,4 +15,7 @@ public interface ProductInfoService {
     Page<ProductInfo> findALL(Pageable pageable);
     List<ProductInfo> findUPALL();
     ProductInfo saveProductInfo(ProductInfo productInfo);
+    void increaseStock(List<CartDTO> cartDTOList);
+    void decreaseStock(List<CartDTO> cartDTOList);
+
 }

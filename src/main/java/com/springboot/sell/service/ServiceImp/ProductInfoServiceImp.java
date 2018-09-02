@@ -2,20 +2,47 @@ package com.springboot.sell.service.ServiceImp;
 
 import com.springboot.sell.dataobject.ProductCategory;
 import com.springboot.sell.dataobject.ProductInfo;
+import com.springboot.sell.dto.CartDTO;
 import com.springboot.sell.enums.ProductStatus;
+import com.springboot.sell.enums.ResultEnum;
+import com.springboot.sell.exception.SellException;
 import com.springboot.sell.repository.ProductInfoRepository;
 import com.springboot.sell.service.ProductInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductInfoServiceImp implements ProductInfoService{
+public class ProductInfoServiceImp implements ProductInfoService {
 
+
+    @Override
+    public void increaseStock(List<CartDTO> cartDTOList) {
+
+    }
+
+    @Override
+    @Transactional
+    public void decreaseStock(List<CartDTO> cartDTOList) {
+        for (CartDTO cartDTO : cartDTOList) {
+            Optional<ProductInfo> productInfoOptional = productInfoRepository.findById(cartDTO.getProductId());
+            if (!productInfoOptional.isPresent()) {
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+            }
+            ProductInfo productInfo = productInfoOptional.get();
+            Integer num = productInfo.getProductStock() - cartDTO.getProductQuantity();
+            if (num < 0) {
+                throw new SellException(ResultEnum.PRODUCT_STOCK_ERROR);
+            }
+            productInfo.setProductStock(num);
+            productInfoRepository.save(productInfo);
+        }
+    }
 
     @Autowired
     private ProductInfoRepository productInfoRepository;
