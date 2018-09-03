@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ResponseUtils {
 
-    public static ResponseVO success(List<ProductVO> object) {
+    public static ResponseVO success(Object object) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setCode(0);
         responseVO.setMsg("成功");

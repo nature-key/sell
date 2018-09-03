@@ -17,5 +17,6 @@ public class OrderDetail {
     private BigDecimal productPrice;
     private Integer productQuantity;
     private String productIcon;
+    //[{productId: "123456",productQuantity: 2 }]
 
 }
