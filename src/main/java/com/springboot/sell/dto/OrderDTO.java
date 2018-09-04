@@ -1,8 +1,11 @@
 package com.springboot.sell.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.springboot.sell.dataobject.OrderDetail;
 import com.springboot.sell.enums.OrderStatus;
 import com.springboot.sell.enums.PayStatus;
+import com.springboot.sell.utils.serializer.DataToLogSerializer;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -13,6 +16,7 @@ import java.util.List;
 
 //@Entity
 @Data
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderDTO {
     private String orderId;
     private String buyerName;
@@ -24,8 +28,9 @@ public class OrderDTO {
     private Integer orderStatus= OrderStatus.NEW.getCode();
     //默认的等待支付
     private Integer payStatus= PayStatus.WAIT.getCode();
-
+    @JsonSerialize(using = DataToLogSerializer.class)
     private Date createTime;
+    @JsonSerialize(using = DataToLogSerializer.class)
     private Date updateTime;
     @Transient
     private List<OrderDetail> orderDetailList;

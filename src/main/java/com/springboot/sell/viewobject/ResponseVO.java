@@ -10,6 +10,6 @@ public class ResponseVO<T> {
 
     private Integer code;
     private String msg;
-    private Object data;
+    private T data;
 
 }
