@@ -8,6 +8,7 @@ import com.springboot.sell.dto.OrderDTO;
 import com.springboot.sell.enums.ResultEnum;
 import com.springboot.sell.exception.SellException;
 import com.springboot.sell.form.OrderForm;
+import com.springboot.sell.service.BuyerService;
 import com.springboot.sell.service.OrderService;
 import com.springboot.sell.utils.ResponseUtils;
 import com.springboot.sell.viewobject.ResponseVO;
@@ -31,6 +32,8 @@ import java.util.Map;
 public class BuyerOrderController {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private BuyerService buyerService;
 
     @PostMapping("/create")
     public ResponseVO<Map<String, String>> create(@Valid OrderForm orderForm, BindingResult bindingResult) {
@@ -64,17 +67,18 @@ public class BuyerOrderController {
     @GetMapping("/detail")
     public ResponseVO<List<OrderDTO>> detail(@RequestParam("openid") String openid,
                                              @RequestParam("orderId") String orderId) {
+
+        OrderDTO orderDTO = buyerService.findOrderOne(openid, orderId);
         //TODO
-        OrderDTO orderDTO = orderService.findOne(orderId);
         return ResponseUtils.success(orderDTO);
     }
 
     @PostMapping("/cancel")
     public ResponseVO cancel(@RequestParam("openid") String openid,
                              @RequestParam("orderId") String orderId) {
-        OrderDTO orderDTO = orderService.findOne(orderId);
-        orderService.cancel(orderDTO);
-        return  ResponseUtils.success();
+
+        OrderDTO orderDTO = buyerService.cancelOrder(openid, orderId);
+        return ResponseUtils.success();
 
     }
 }
