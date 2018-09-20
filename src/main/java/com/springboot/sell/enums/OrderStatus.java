@@ -3,11 +3,11 @@ package com.springboot.sell.enums;
 import lombok.Getter;
 
 @Getter
-public enum OrderStatus {
+public enum OrderStatus implements  CodeEnum{
 
-    NEW(0,"新订单"),
-    FINISHED(1,"完结"),
-    CANCEL(2,"已取消");
+    NEW(0, "新订单"),
+    FINISHED(1, "完结"),
+    CANCEL(2, "已取消");
 
     private Integer code;
     private String message;
@@ -16,4 +16,15 @@ public enum OrderStatus {
         this.code = code;
         this.message = message;
     }
+
+//    public static OrderStatus getOrderStatus(Integer code) {
+//
+//        for (OrderStatus orderStatus : OrderStatus.values()) {
+//            if (orderStatus.getCode().equals(code)) {
+//                return orderStatus;
+//            }
+//        }
+//        return null;
+//    }
+
 }

@@ -8,13 +8,25 @@ spring:
     show-sql: true
   jackson:
     default-property-inclusion: non_null
+  redis:
+    host: 192.168.0.107
+    pool: 6379
 server:
   servlet:
     context-path: /sell
-#logging:
-#  pattern:
-#    console: "%d - %msg%n"
-##  file: /Users/anfu/IdeaProjects/sell
-#  path: /Users/anfu
-##  level:
-##   com.springboot.sell.SellApplicationTests.Debug
+wechat:
+  mpAPPId: wx8f46d2ba8db0c752
+  mpAppSecret: 30d148af877f8e9c45778ebd03c2d461
+  openAPPId:
+  openAppSecret:
+  mchId: 1409146202
+  mchKey: c976503d34ca432c601361f969fd8d85
+  keyPath: /var/wenxin_cert/h5.p12
+  notifyUrl: http://wfrwh8.natappfree.cc/sell/pay/notify
+projecturl:
+  wechatMpAuthorize: http://cyu54g.natappfree.cc
+  wechatOpenAuthorize: http://cyu54g.natappfree.cc
+  sell: http://localhost:8080
+logging:
+  level:
+    com.springboot.sell.dataobject.maper: trace

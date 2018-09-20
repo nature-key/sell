@@ -75,4 +75,32 @@ public class ProductInfoServiceImp implements ProductInfoService {
     public List<ProductInfo> findUPALL() {
         return productInfoRepository.findByProductStatus(ProductStatus.UP.getCode());
     }
+
+    @Override
+    public ProductInfo onSale(String productId) {
+        Optional<ProductInfo> productInfoOptional = productInfoRepository.findById(productId);
+        if (!productInfoOptional.isPresent()) {
+            throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+        }
+        ProductInfo productInfo = productInfoOptional.get();
+        if(productInfo.getProductStatusEnum().equals(ProductStatus.UP)){
+            throw new SellException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+        productInfo.setProductStatus(ProductStatus.UP.getCode());
+       return productInfoRepository.save(productInfo);
+    }
+
+    @Override
+    public ProductInfo offSale(String productId) {
+        Optional<ProductInfo> productInfoOptional = productInfoRepository.findById(productId);
+        if (!productInfoOptional.isPresent()) {
+            throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+        }
+        ProductInfo productInfo = productInfoOptional.get();
+        if(productInfo.getProductStatusEnum().equals(ProductStatus.DOWN)){
+            throw new SellException(ResultEnum.PRODUCT_STATUS_ERROR);
+        }
+        productInfo.setProductStatus(ProductStatus.DOWN.getCode());
+        return productInfoRepository.save(productInfo);
+    }
 }

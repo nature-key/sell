@@ -1,13 +1,19 @@
 package com.springboot.sell.dataobject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.springboot.sell.enums.ProductStatus;
+import com.springboot.sell.utils.EnumUtil;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Data
+@DynamicUpdate
 public class ProductInfo {
     @Id
     private String productId;
@@ -16,7 +22,13 @@ public class ProductInfo {
     private Integer productStock;
     private String productDescription;
     private String productIcon;
-    private Integer productStatus;
+    private Integer productStatus=ProductStatus.UP.getCode();
     private Integer categoryType;
+    private Date createTime;
+    private Date updateTime;
+    @JsonIgnore
+    public ProductStatus getProductStatusEnum(){
+        return EnumUtil.getByCode(productStatus,ProductStatus.class);
+    }
 
 }

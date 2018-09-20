@@ -1,10 +1,12 @@
 package com.springboot.sell.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.springboot.sell.dataobject.OrderDetail;
 import com.springboot.sell.enums.OrderStatus;
 import com.springboot.sell.enums.PayStatus;
+import com.springboot.sell.utils.EnumUtil;
 import com.springboot.sell.utils.serializer.DataToLogSerializer;
 import lombok.Data;
 
@@ -25,13 +27,26 @@ public class OrderDTO {
     private String buyerOpenid;
     private BigDecimal orderAmount;
     //默认新下单
-    private Integer orderStatus= OrderStatus.NEW.getCode();
+    private Integer orderStatus = OrderStatus.NEW.getCode();
     //默认的等待支付
-    private Integer payStatus= PayStatus.WAIT.getCode();
+    private Integer payStatus = PayStatus.WAIT.getCode();
     @JsonSerialize(using = DataToLogSerializer.class)
     private Date createTime;
     @JsonSerialize(using = DataToLogSerializer.class)
     private Date updateTime;
     @Transient
     private List<OrderDetail> orderDetailList;
+
+    @JsonIgnore  //转成json忽略字段
+    public OrderStatus getOrderStatusEnum() {
+
+        return EnumUtil.getByCode(orderStatus, OrderStatus.class);
+    }
+
+    @JsonIgnore
+    public PayStatus getPayStatusEnum() {
+
+        return EnumUtil.getByCode(payStatus, PayStatus.class);
+
+    }
 }

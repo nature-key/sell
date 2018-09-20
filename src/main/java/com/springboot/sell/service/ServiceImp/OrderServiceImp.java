@@ -1,5 +1,6 @@
 package com.springboot.sell.service.ServiceImp;
 
+import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.springboot.sell.converter.OrderMasterToOrderDTO;
 import com.springboot.sell.dataobject.OrderDetail;
 import com.springboot.sell.dataobject.OrderMaster;
@@ -13,7 +14,9 @@ import com.springboot.sell.exception.SellException;
 import com.springboot.sell.repository.OrderDetailRepository;
 import com.springboot.sell.repository.OrderMasterRepository;
 import com.springboot.sell.service.OrderService;
+import com.springboot.sell.service.PayService;
 import com.springboot.sell.service.ProductInfoService;
+import com.springboot.sell.service.PushMessage;
 import com.springboot.sell.utils.KeyUtil;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +49,12 @@ public class OrderServiceImp implements OrderService {
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private OrderMasterRepository orderMasterRepository;
+
+    @Autowired
+    private PayService payService;
+
+    @Autowired
+    private PushMessage pushMessage;
 
     @Override
     @Transactional
@@ -104,7 +113,7 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public Page<OrderDTO> findList(String buyerOpenid, Pageable pageable) {
-        OrderDTO orderDTO = new OrderDTO();
+//        OrderDTO orderDTO = new OrderDTO();
         Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
         List<OrderDTO> orderDTOList = OrderMasterToOrderDTO.converterList(orderMasterPage.getContent());
         Page<OrderDTO> orderDTOPage = new PageImpl<>(orderDTOList, pageable, orderMasterPage.getTotalElements());
@@ -127,7 +136,7 @@ public class OrderServiceImp implements OrderService {
             log.error("【取消订单】更新失败 orderID={},orderStatus={}", orderDTO.getOrderId(), orderDTO.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_UPDATE_FAIL);
         }
-
+        //推库存
         if (CollectionUtils.isEmpty(orderDTO.getOrderDetailList())) {
             log.error("【取消订单 订单无商品详情】 orderDTO={}", orderDTO);
             throw new SellException(ResultEnum.ORDER_DETAIL_EMPTY);
@@ -136,6 +145,9 @@ public class OrderServiceImp implements OrderService {
                 new CartDTO(e.getProductId(), e.getProductQuantity())
         ).collect(Collectors.toList());
         productInfoService.increaseStock(cartDTOList);
+        if (orderDTO.getPayStatus().equals(PayStatus.SUCCESS.getCode())) {
+            payService.refund(orderDTO);
+        }
         return orderDTO;
     }
 
@@ -155,6 +167,7 @@ public class OrderServiceImp implements OrderService {
             log.error("【完结订单】更新失败 orderID={},orderStatus={}", orderDTO.getOrderId(), orderDTO.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_UPDATE_FAIL);
         }
+        pushMessage.orderStatus(orderDTO);
         return orderDTO;
     }
 
@@ -180,5 +193,15 @@ public class OrderServiceImp implements OrderService {
 
 
         return orderDTO;
+    }
+
+    @Override
+    public Page<OrderDTO> findList(Pageable pageable) {
+
+        Page<OrderMaster> orderMasterPage = orderMasterRepository.findAll(pageable);
+        List<OrderDTO> orderDTOList = OrderMasterToOrderDTO.converterList(orderMasterPage.getContent());
+        Page<OrderDTO> orderDTOPage = new PageImpl<>(orderDTOList, pageable, orderMasterPage.getTotalElements());
+
+        return orderDTOPage;
     }
 }

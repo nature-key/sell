@@ -1,6 +1,8 @@
 package com.springboot.sell.service.ServiceImp;
 
 import com.springboot.sell.dataobject.ProductInfo;
+import com.springboot.sell.enums.ProductStatus;
+import com.springboot.sell.enums.ResultEnum;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,4 +62,15 @@ public class ProductInfoServiceImpTest {
         List<ProductInfo> list = productInfoServiceImp.findUPALL();
         Assert.assertNotEquals(0, list.size());
     }
+    @Test
+    public void onSale(){
+      ProductInfo productInfo =   productInfoServiceImp.onSale("123456");
+      Assert.assertEquals(ProductStatus.UP,productInfo.getProductStatusEnum());
+    }
+    @Test
+    public void offSle(){
+        ProductInfo productInfo  =  productInfoServiceImp.offSale("123456");
+        Assert.assertEquals(ProductStatus.DOWN,productInfo.getProductStatusEnum());
+    }
+
 }

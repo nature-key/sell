@@ -59,31 +59,39 @@ public class OrderServiceImpTest {
 
     @Test
     public void findList() {
-        PageRequest request = new PageRequest(0,2);
-       Page<OrderDTO> orderDTOPage= orderServiceImp.findList(BUYER_OPENID,request);
-       Assert.assertNotEquals(0,orderDTOPage.getTotalElements());
+        PageRequest request = new PageRequest(0, 2);
+        Page<OrderDTO> orderDTOPage = orderServiceImp.findList(BUYER_OPENID, request);
+        Assert.assertNotEquals(0, orderDTOPage.getTotalElements());
     }
 
     @Test
     public void cancel() {
         OrderDTO orderDTO = orderServiceImp.findOne(ORDER_ID);
-        OrderDTO orderDTOresult =  orderServiceImp.cancel(orderDTO);
-        Assert.assertEquals(OrderStatus.CANCEL.getCode(),orderDTOresult.getOrderStatus());
+        OrderDTO orderDTOresult = orderServiceImp.cancel(orderDTO);
+        Assert.assertEquals(OrderStatus.CANCEL.getCode(), orderDTOresult.getOrderStatus());
     }
 
     @Test
     public void finish() {
         OrderDTO orderDTO = orderServiceImp.findOne(ORDER_ID);
-        OrderDTO orderDTOresult =  orderServiceImp.finish(orderDTO);
-        Assert.assertEquals(OrderStatus.FINISHED.getCode(),orderDTOresult.getOrderStatus());
+        OrderDTO orderDTOresult = orderServiceImp.finish(orderDTO);
+        Assert.assertEquals(OrderStatus.FINISHED.getCode(), orderDTOresult.getOrderStatus());
 
     }
 
     @Test
     public void paid() {
         OrderDTO orderDTO = orderServiceImp.findOne(ORDER_ID);
-        OrderDTO orderDTOresult =  orderServiceImp.paid(orderDTO);
-        Assert.assertEquals(PayStatus.SUCCESS.getCode(),orderDTOresult.getPayStatus());
+        OrderDTO orderDTOresult = orderServiceImp.paid(orderDTO);
+        Assert.assertEquals(PayStatus.SUCCESS.getCode(), orderDTOresult.getPayStatus());
+    }
+
+    @Test
+    public void findlist() {
+        PageRequest request = new PageRequest(0, 2);
+        Page<OrderDTO> orderDTOPage = orderServiceImp.findList(request);
+        Assert.assertNotEquals(0, orderDTOPage.getTotalElements());
 
     }
+
 }
